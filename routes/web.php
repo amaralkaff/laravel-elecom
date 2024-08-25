@@ -3,6 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminMainController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductDiscountController;
+use App\Http\Controllers\Admin\SubCategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,9 +20,34 @@ Route::get('/dashboard', function () {
 // admin route
 
 Route::middleware(['auth', 'verified','rolemanager:admin'])->group(function () {
-    Route::controller(AdminMainController::class)->group(function () {
-        Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::controller(AdminMainController::class)->group(function (){
             Route::get('/dashboard', 'index')->name('admin');
+            Route::get('/settings', 'setting')->name('admin.settings');
+            Route::get('/manage/users', 'manage_user')->name('admin.manage.user');
+            Route::get('/manage/stores', 'manage_stores')->name('admin.manage.store');
+            Route::get('/cart/history', 'cart_history')->name('admin.cart.history');
+            Route::get('/cart/history', 'order')->name('admin.order.history');
+        });
+        Route::controller(CategoryController::class)->group(function (){
+            Route::get('/category/create', 'index')->name('category.create');
+            Route::get('/settings/manage', 'manage')->name('category.manage');
+        });
+        Route::controller(SubCategoryController::class)->group(function (){
+            Route::get('/subcategory/create', 'index')->name('subcategory.create');
+            Route::get('/subsettings/manage', 'manage')->name('subcategory.manage');
+        });
+        Route::controller(ProductController::class)->group(function (){
+            Route::get('/product/manage', 'index')->name('product.create');
+            Route::get('/product/review/manage', 'review_manage')->name('product.review.manage');
+        });
+        Route::controller(ProductAttributeController::class)->group(function (){
+            Route::get('/productattribute/manage', 'index')->name('productattribute.create');
+            Route::get('/productattribute/review/manage', 'manage')->name('productattribute.manage');
+        });
+        Route::controller(ProductDiscountController::class)->group(function (){
+            Route::get('/discount/manage', 'index')->name('discount.create');
+            Route::get('/discount/review/manage', 'manage')->name('discount.manage');
         });
     });
 });
